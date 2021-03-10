@@ -1,0 +1,1 @@
+package com.hearthstonecardreader.features.hearthstonecards.dto;

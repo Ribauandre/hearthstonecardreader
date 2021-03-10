@@ -1,0 +1,14 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          blizzard:
+            client-id: ((client-id))
+            client-secret: ((client-secret))
+            authorization-grant-type: client_credentials
+        provider:
+          blizzard:
+            token-uri: https://us.battle.net/oauth/token
+  main:
+    allow-bean-definition-overriding: true
