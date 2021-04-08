@@ -18,22 +18,9 @@ public class HearthStoneCardsService {
 
     //Method to grab the Card data from the Api service and start filtering
     //This is also the method that returns the final object for the front-end
-    public List<Card> getSortedWarlockCards() {
+    public Deck getSortedWarlockCards() {
         Deck jsonCards = blizzardService.getCards().block();
-        List<Card> cards = jsonCards.getCards().stream().filter(card -> card.getManaCost() >= 7).collect(Collectors.toList());
-        Collections.sort(cards, new Comparator<>() {
-            @Override
-            public int compare(Card o1, Card o2) {
-                return (int) (o1.id - o2.id);
-            }
-        });
-        int count = 8;
-        while(count < cards.size()){
-            cards.remove(count);
-            count++;
-        }
-
-        return populateCardIDs(cards);
+        return populateCardIDs(jsonCards);
 
     }
 
@@ -57,34 +44,34 @@ public class HearthStoneCardsService {
     }
 
     //  logic to find and set the the ID's to their corresponding names
-    public List<Card> populateCardIDs(List<Card> cards) {
+    public Deck populateCardIDs(Deck jsonCards) {
         List<Rarity> rarities = getRarity();
         List<CardClasses> cardClasses = getClasses();
         List<Set> sets = getSet();
         List<Type> types = getTypes();
 
-        for(Card card: cards){
-            Optional<Rarity> rarity = rarities.stream().filter(rare -> rare.getId() == card.getRarityId()).findFirst();
-            card.setRarityName(rarity.get().getName());
+        for(Card card : jsonCards.cards){
 
-            System.out.println(card.getRarityName());
+                Optional<Rarity> rarity = rarities.stream().filter(rare -> rare.getId() == card.getRarityId()).findFirst();
+                card.setRarityName(rarity.isEmpty() ? "Rarity not found" : rarity.get().getName());
 
-            Optional<CardClasses> cardClassifer = cardClasses.stream().filter(cardClass -> cardClass.getId() == card.getClassId()).findFirst();
-            card.setClassName(cardClassifer.get().getName());
+                System.out.println(card.getRarityName());
 
-            System.out.println(card.getClassName());
+                Optional<CardClasses> cardClassifer = cardClasses.stream().filter(cardClass -> cardClass.getId() == card.getClassId()).findFirst();
+                card.setClassName(cardClassifer.isEmpty() ? "Class not found" : cardClassifer.get().getName());
 
-            Optional<Set> cardSets = sets.stream().filter(cardSet -> cardSet.getId() == card.getCardSetId()).findFirst();
-            card.setCardSetName(cardSets.get().getName());
+                System.out.println(card.getClassName());
 
-            System.out.println(card.getCardSetName());
+                Optional<Set> cardSets = sets.stream().filter(cardSet -> cardSet.getId() == card.getCardSetId()).findFirst();
+                card.setCardSetName(cardSets.isEmpty() ? "Set not found" : cardSets.get().getName());
+                System.out.println(card.getCardSetName());
 
-            Optional<Type> cardTypes = types.stream().filter(type -> type.getId() == card.getCardTypeId()).findFirst();
-            card.setTypeName(cardTypes.get().getName());
 
-            System.out.println(card.getTypeName());
+                Optional<Type> cardTypes = types.stream().filter(type -> type.getId() == card.getCardTypeId()).findFirst();
+                card.setTypeName(cardTypes.isEmpty() ? "Type not found" : cardTypes.get().getName());
 
+                System.out.println(card.getTypeName());
         }
-        return cards;
+        return jsonCards;
     }
 }

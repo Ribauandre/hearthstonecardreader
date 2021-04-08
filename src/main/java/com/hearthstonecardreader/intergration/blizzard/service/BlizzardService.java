@@ -14,7 +14,7 @@ public class BlizzardService {
     private WebClient webClient;
 //api call to get cards from blizzard api (used api params to filter for warlock rarity and collectible
     public Mono<Deck> getCards() {
-        return this.webClient.get().uri("https://us.api.blizzard.com/hearthstone/cards?locale=en_US&class=warlock&collectible=1&rarity=legendary")
+        return this.webClient.get().uri("https://us.api.blizzard.com/hearthstone/cards?locale=en_US")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(Deck.class);

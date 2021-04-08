@@ -22,6 +22,6 @@ public class HearthStoneCardsController {
     @CrossOrigin
     @GetMapping("/warlocks")
     public List<Card> getWarlockCards(){
-        return hearthStoneCardsService.getSortedWarlockCards();
+        return hearthStoneCardsService.getSortedWarlockCards().cards;
     }
 }
